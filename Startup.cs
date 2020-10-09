@@ -32,6 +32,21 @@ namespace ApiUsuarios
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IUsuarioRepository, UsuarioRepository>();
             services.AddControllers();
+
+            services.AddSwaggerGen(s =>
+            {
+                s.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "API Usuario",
+                    Description = "Api para armazenar e retornar dados de usuario, com validação de email, cpf e criptografia de senha :)",
+                    Contact = new Microsoft.OpenApi.Models.OpenApiContact
+                    {
+                        Name = "Daniel Ribeiro",
+                        Url = new Uri("https://www.linkedin.com/in/daniel-ribeiro-101a68162/")
+                    }
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +66,14 @@ namespace ApiUsuarios
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(s =>
+            {
+                s.RoutePrefix = "swagger";
+                s.SwaggerEndpoint("/swagger/v1/swagger.json", "Api Example");
             });
         }
     }
